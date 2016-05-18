@@ -1,5 +1,7 @@
 ## Simulator Status Magic
 
+**This is a branch for external vendors of T-Mobile CZ (only). Be careful with using pod dependencies – your code security can be easily compromised.**
+
 Modify the iOS Simulator so that it has a perfect status bar, then run your app and take perfect screenshots every time. The modifications made are designed to match the images you see on the Apple site and are as follows:
 
 * 9:41 AM is displayed for the time.
