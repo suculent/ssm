@@ -13,8 +13,8 @@ Pod::Spec.new do |s|
   s.homepage         = "https://github.com/suculent/ssm"
   s.license          = 'MIT'
   s.author           = { "Dave Verwer" => "dave.verwer@shinydevelopment.com", 
-  						 "Greg Spiers" => "greg.spiers@shinydevelopment.com",
-  						 "Matej Sychra" =≥ "suculent@me.com" }
+               "Greg Spiers" => "greg.spiers@shinydevelopment.com",
+               "Matej Sychra" => "suculent@me.com" }
   s.source           = { :git => "https://github.com/suculent/ssm.git", :tag => s.version.to_s }
 
   s.platform     = :ios, '8.0'
