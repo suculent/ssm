@@ -28,6 +28,7 @@
 #import "SDStatusBarOverriderPost8_3.h"
 #import "SDStatusBarOverriderPost9_0.h"
 #import "SDStatusBarOverriderPost9_3.h"
+#import "SDStatusBarOverriderPost10_0.h"
 
 static NSString * const SDStatusBarManagerUsingOverridesKey = @"using_overrides";
 static NSString * const SDStatusBarManagerBluetoothStateKey = @"bluetooth_state";
@@ -42,6 +43,16 @@ static NSString * const SDStatusBarManagerTimeStringKey = @"time_string";
 
 @implementation SDStatusBarManager
 
+- (instancetype)init
+{
+  self = [super init];
+  if (self) {
+    // Set any defaults for the status bar
+    self.batteryDetailEnabled = YES;
+  }
+  return self;
+}
+
 - (void)enableOverrides
 {
   self.usingOverrides = YES;
@@ -50,6 +61,7 @@ static NSString * const SDStatusBarManagerTimeStringKey = @"time_string";
   self.overrider.carrierName = self.carrierName;
   self.overrider.bluetoothEnabled = self.bluetoothState != SDStatusBarManagerBluetoothHidden;
   self.overrider.bluetoothConnected = self.bluetoothState == SDStatusBarManagerBluetoothVisibleConnected;
+  self.overrider.batteryDetailEnabled = self.batteryDetailEnabled;
 
   [self.overrider enableOverrides];
 }
@@ -79,7 +91,6 @@ static NSString * const SDStatusBarManagerTimeStringKey = @"time_string";
   [self.userDefaults setValue:@(bluetoothState) forKey:SDStatusBarManagerBluetoothStateKey];
 
   if (self.usingOverrides) {
-    // Refresh the active status bar
     [self enableOverrides];
   }
 }
@@ -96,7 +107,6 @@ static NSString * const SDStatusBarManagerTimeStringKey = @"time_string";
   [self.userDefaults setObject:timeString forKey:SDStatusBarManagerTimeStringKey];
 
   if (self.usingOverrides) {
-    // Refresh the active status bar
     [self enableOverrides];
   }
 }
@@ -117,17 +127,17 @@ static NSString * const SDStatusBarManagerTimeStringKey = @"time_string";
 + (id<SDStatusBarOverrider>)overriderForSystemVersion:(NSString *)systemVersion
 {
   id<SDStatusBarOverrider> overrider = nil;
-  BOOL before9_3 = ([systemVersion compare:@"9.3" options:NSNumericSearch] == NSOrderedAscending);
-  BOOL before9_0 = ([systemVersion compare:@"9.0" options:NSNumericSearch] == NSOrderedAscending);
-  BOOL before8_3 = ([systemVersion compare:@"8.3" options:NSNumericSearch] == NSOrderedAscending);
-  if (before8_3) {
-    overrider = [SDStatusBarOverriderPre8_3 new];
-  } else if (before9_0) {
-    overrider = [SDStatusBarOverriderPost8_3 new];
-  } else if (before9_3) {
-    overrider = [SDStatusBarOverriderPost9_0 new];
-  } else {
+  NSProcessInfo *pi = [NSProcessInfo processInfo];
+  if ([pi isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){ 10, 0, 0 }]) {
+    overrider = [SDStatusBarOverriderPost10_0 new];
+  } else if ([pi isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){ 9, 3, 0 }]) {
     overrider = [SDStatusBarOverriderPost9_3 new];
+  } else if ([pi isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){ 9, 0, 0 }]) {
+    overrider = [SDStatusBarOverriderPost9_0 new];
+  } else if ([pi isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){ 8, 3, 0 }]) {
+    overrider = [SDStatusBarOverriderPost8_3 new];
+  } else {
+    overrider = [SDStatusBarOverriderPre8_3 new];
   }
   return overrider;
 }
@@ -153,8 +163,8 @@ static NSString * const SDStatusBarManagerTimeStringKey = @"time_string";
   formatter.timeStyle = NSDateFormatterShortStyle;
 
   NSDateComponents *components = [[NSCalendar currentCalendar] components: NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:[NSDate date]];
-  components.hour = 10;
-  components.minute = 42;
+  components.hour = 9;
+  components.minute = 41;
 
   return [formatter stringFromDate:[[NSCalendar currentCalendar] dateFromComponents:components]];
 }

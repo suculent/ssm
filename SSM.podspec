@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "SSM"
-  s.version          = "1.8"
+  s.version          = "1.9"
   s.summary          = "Enable perfect status bars in the iOS Simulator (T-Mobile CZ)."
   s.description      = <<-DESC
                         Modify the iOS Simulator so that it has a perfect status bar, then run your app and take perfect screenshots every time. The modifications made are designed to match the images you see on the Apple site and are as follows:
@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
                "Matej Sychra" => "suculent@me.com" }
   s.source           = { :git => "https://github.com/suculent/ssm.git", :tag => s.version.to_s }
 
-  s.platform     = :ios, '8.0'
+  s.platform     = :ios, '8.3'
   s.requires_arc = true
 
   s.source_files = 'SDStatusBarManager'
